@@ -21,5 +21,7 @@ from fit5120backend import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('wordcloud', views.word_cloud)
+    path('wordcloud', views.word_cloud),
+    path('getyeardata', views.get_year_data),
+    path('test', views.test)
 ]
