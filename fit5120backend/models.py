@@ -22,3 +22,10 @@ class Yeardata(models.Model):
     class Meta:
         managed = False
         db_table = 'yearData'
+
+class Word(models.Model):
+    word = models.CharField(max_length=100, unique=True)
+    count = models.IntegerField(default=1)
+    def increment_count(self):
+        self.count += 1
+        self.save()
