@@ -21,14 +21,16 @@ text = " ".join([k for k in json_str.keys() for i in range(json_str[k])])
 
 @api_view(["GET", "POST"])
 def word_cloud(request, *args, **kwargs):
-    if request.method == "GET":
-        wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
-        # print(json_str)
-        # return Response(json_str)
-        image = wordcloud.generate_from_frequencies(json_str)
-        result = wordCloudImg_to_byt(image)
-        return HttpResponse(result, content_type='image/png')
+    if request.method not in ["GET", "POST"]:
+        """
+        if request is nether GET nor POST, return error to front end.
+        """
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     if request.method == 'POST':
+        """
+        If request is Post, insert Json into database first.
+        """
         json_data = json.loads(request.body)
         word = json_data.get('word')
         if not word:
@@ -39,10 +41,11 @@ def word_cloud(request, *args, **kwargs):
         except Word.DoesNotExist:
             word_obj = Word(word=word, count=1)
             word_obj.save()
-        wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
-        result = generate_wordcloud_by_database(wordcloud)
-        return HttpResponse(result, content_type='image/png')
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    """
+    if request in GET or Post, Generate wordcloud from database and send back to front end.
+    """
+    result = generate_wordcloud_by_database(wordcloud)
+    return HttpResponse(result, content_type='image/png')
 
 
 @api_view(["GET"])
@@ -66,6 +69,11 @@ def test(request, *args, **kwargs):
 
 
 def generate_wordcloud_by_database(wordcloud):
+    """
+    Generate wordcloud from database
+    :param wordcloud: wordcloud has been identified
+    :return: wordcloud picture in byt
+    """
     words = Word.objects.all()
     serializer = WordsSerializer(words, many=True)
     # print(serializer.data)
