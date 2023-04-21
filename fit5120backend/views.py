@@ -20,6 +20,7 @@ text = " ".join([k for k in json_str.keys() for i in range(json_str[k])])
 # Create your views here.
 
 @api_view(["GET", "POST"])
+@csrf_exempt
 def word_cloud(request, *args, **kwargs):
     if request.method not in ["GET", "POST"]:
         """
@@ -49,6 +50,7 @@ def word_cloud(request, *args, **kwargs):
 
 
 @api_view(["GET"])
+@csrf_exempt
 def get_year_data(request, *args, **kwargs):
     try:
         year_data = Yeardata.objects.all()
