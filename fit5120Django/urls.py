@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from fit5120backend import views
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('wordcloud', views.word_cloud),

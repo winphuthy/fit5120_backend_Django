@@ -1,5 +1,5 @@
-﻿# 基于Python 3.11.2镜像构建
-FROM python:3.11.2
+# 基于Python 3.11.2镜像构建
+FROM python:3.9
 
 # 设置工作目录
 WORKDIR /Django
@@ -17,7 +17,9 @@ ENV WATCHPACK_POLLING=true
 
 # 开放端口
 EXPOSE 8000
+EXPOSE 8889
+
 
 # 运行命令
-CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
-#CMD ["python"]
+CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8889 & python manage.py runserver 0.0.0.0:8000"]
+#CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
