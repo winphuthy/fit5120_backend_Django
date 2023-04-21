@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get upgrade -y
-        sudo apt-get install -y mysql-client libmysqlclient-dev mariadb-client libmariadbclient-dev
+        sudo apt-get install -y mysql-client-8.0 libmysqlclient-dev mariadb-client libmariadbclient-dev
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
