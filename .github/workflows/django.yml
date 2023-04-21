@@ -22,7 +22,8 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libmysqlclient libmariadbclient
+        sudo apt-get upgrade -y
+        sudo apt-get install -y mysql-client libmysqlclient-dev mariadb-client libmariadbclient-dev
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
