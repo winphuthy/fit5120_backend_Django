@@ -29,5 +29,4 @@ jobs:
         python manage.py migrate
     - name: Run Backend
       run: |
-        bg
-        python manage.py runserver
+        nohup python manage.py runserver 0.0.0.0:$PORT > /dev/null 2>&1 &
