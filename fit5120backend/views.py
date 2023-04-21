@@ -69,6 +69,11 @@ def test(request, *args, **kwargs):
 
 
 def generate_wordcloud_by_database(wordcloud):
+    """
+    Generate wordcloud from database
+    :param wordcloud: wordcloud has been identified
+    :return: wordcloud picture in byt
+    """
     words = Word.objects.all()
     serializer = WordsSerializer(words, many=True)
     # print(serializer.data)
