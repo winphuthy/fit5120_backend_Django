@@ -1,4 +1,4 @@
-# 基于Python 3.11.2镜像构建
+﻿# 基于Python 3.11.2镜像构建
 FROM python:3.9
 
 # 设置工作目录
@@ -17,9 +17,7 @@ ENV WATCHPACK_POLLING=true
 
 # 开放端口
 EXPOSE 8000
-EXPOSE 8889
-
 
 # 运行命令
-CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8889 & python manage.py runserver 0.0.0.0:8000"]
+CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
 #CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
