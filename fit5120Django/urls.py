@@ -23,5 +23,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('wordcloud', views.word_cloud),
     path('getyeardata', views.get_year_data),
+    path('gettopword', views.get_top_word),
     path('test', views.test)
 ]

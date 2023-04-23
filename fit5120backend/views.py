@@ -64,6 +64,14 @@ def get_year_data(request, *args, **kwargs):
 
 @api_view(["GET"])
 @csrf_exempt
+def get_top_word(request, *args, **kwargs):
+    top_words = Word.objects.order_by('-count')[:5]
+    serializer = WordsSerializer(top_words, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+@csrf_exempt
 def test(request, *args, **kwargs):
     wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     result = generate_wordcloud_by_database(wordcloud)
