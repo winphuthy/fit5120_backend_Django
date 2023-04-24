@@ -32,7 +32,7 @@ def word_cloud(request):
         if request is nether GET nor POST, return error to front end.
         """
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud( width= 1920, height= 1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     if request.method == 'POST':
         """
         If request is Post, insert Json into database first.
@@ -118,6 +118,6 @@ def wordCloudImg_to_byt(image):
 @api_view(["GET"])
 @csrf_exempt
 def test(request, *args, **kwargs):
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud( width= 1920, height= 1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     result = generate_wordcloud_by_database(wordcloud)
     return HttpResponse(result, content_type='image/png')
