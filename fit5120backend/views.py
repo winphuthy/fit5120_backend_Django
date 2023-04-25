@@ -1,6 +1,7 @@
 import json
 from io import BytesIO
 
+from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
@@ -27,7 +28,7 @@ def word_cloud(request, *args, **kwargs):
         if request is nether GET nor POST, return error to front end.
         """
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud(width=1920, height=1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     if request.method == 'POST':
         """
         If request is Post, insert Json into database first.
@@ -61,13 +62,19 @@ def get_year_data(request, *args, **kwargs):
     except Exception:
         return JsonResponse({'msg': 'Server Error'}, status=500)
 
+@api_view(["GET"])
+@csrf_exempt
+def get_word_list(request):
+    words = Word.objects.all().values('word')
+    data = json.dumps(list(words))
+    return HttpResponse(data, content_type='application/json')
 
 @api_view(["GET"])
 @csrf_exempt
 def test(request, *args, **kwargs):
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
-    result = generate_wordcloud_by_database(wordcloud)
-    return HttpResponse(result, content_type='image/png')
+    words = Word.objects.all().values('word')
+    data = json.dumps(list(words))
+    return HttpResponse(data, content_type='application/json')
 
 
 def generate_wordcloud_by_database(wordcloud):
