@@ -76,6 +76,18 @@ def test(request, *args, **kwargs):
     data = json.dumps(list(words))
     return HttpResponse(data, content_type='application/json')
 
+@api_view(["GET"])
+@csrf_exempt
+def get_top_word(request):
+    """
+    Get the top 5 word in database
+    :param request: request from front-end
+    :return: JSON to frontend
+    """
+    top_words = Word.objects.order_by('-count')[:5]
+    serializer = WordsSerializer(top_words, many=True)
+    return Response(serializer.data)
+
 
 def generate_wordcloud_by_database(wordcloud):
     """
@@ -105,3 +117,5 @@ def wordCloudImg_to_byt(image):
     image.to_image().save(img_bytes, format='PNG')
     result = img_bytes.getvalue()
     return result
+
+
