@@ -71,6 +71,12 @@ def get_year_data(request):
     except Exception:
         return JsonResponse({'msg': 'Server Error'}, status=500)
 
+@api_view(["GET"])
+@csrf_exempt
+def get_word_list(request):
+    words = Word.objects.all().values('word')
+    data = json.dumps(list(words))
+    return HttpResponse(data, content_type='application/json')
 
 @api_view(["GET"])
 @csrf_exempt
