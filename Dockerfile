@@ -26,4 +26,5 @@ EXPOSE 8000
 EXPOSE 8889
 
 # 运行命令
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+CMD ["sh", "/Django/startup.sh"]
+CMD [ "sh", "/Django/test.sh" ]

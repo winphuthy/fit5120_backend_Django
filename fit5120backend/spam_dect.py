@@ -4,8 +4,8 @@ import torch
 
 def spam_dect(text):
     # Load the saved model state dictionary
-
-    state_dict = torch.load('to_use.pth')
+    path = '/Django/fit5120backend/to_use.pth'
+    state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
     model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
@@ -30,4 +30,4 @@ def spam_dect(text):
 
     # Print the percentage of label 1
     label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100 
-    return f"RESULT: Your message is {label_1_percentage:.2f}% chance to be a scam."
+    return "RESULT: Your message is " + str(round(label_1_percentage,2))+ " percent chance to be a scam."

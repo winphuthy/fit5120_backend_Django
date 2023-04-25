@@ -11,7 +11,8 @@ from wordcloud import WordCloud
 from .models import Word
 from .models import Yeardata
 from .serializers import YearDataSerializer, WordsSerializer
-from filter import word_dect
+from .cleaner import word_dect
+from .spam_dect import spam_dect
 
 json_str = '{"Python": 150, "Java": 120, "JavaScript": 80, "Ruby": 40, "Go": 20}'
 json_str = json.loads(json_str)
@@ -38,7 +39,7 @@ def word_cloud(request, *args, **kwargs):
         word = word_dect(word)
 
         if not word:
-            return JsonResponse({'status': 'error', 'message': 'Sensitive Word Detected!'})
+            return JsonResponse({'status': 'error', 'message': 'Sensitive Word Detected or length of word is too long'})
         try:
             word_obj = Word.objects.get(word=word)
             word_obj.increment_count()
@@ -101,3 +102,19 @@ def wordCloudImg_to_byt(image):
     image.to_image().save(img_bytes, format='PNG')
     result = img_bytes.getvalue()
     return result
+
+#### LESTER MODIFICATION NEEDED ####
+@api_view(["POST"])
+@csrf_exempt
+def spam_detection(request, *args, **kwargs):
+    if request.method not in ["GET", "POST"]:
+        """
+        if request is neither GET nor POST, return error to front end.
+        """
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    input_text = request.data.get('input_text') # request from front end
+    if not input_text:
+        return Response({'error': 'input_text field is required.'})
+    result = spam_dect(input_text)
+    return Response(result) # Return result to front_end
+

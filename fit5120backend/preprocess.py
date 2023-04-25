@@ -1,8 +1,12 @@
 from transformers import BertForPreTraining,BertTokenizer
 import re
 import string
+import nltk
 from nltk.corpus import stopwords
+nltk.download('punkt')
+nltk.download('stopwords')
 from nltk.tokenize import word_tokenize
+stopwords = set(stopwords.words('english'))
 def preprocess(text):
     # Lowercase the text
     text = str(text).lower()
@@ -14,11 +18,9 @@ def preprocess(text):
     text = re.sub(r'\n','',text )
     # Remove multiple spaces
     text = re.sub('\s+', ' ', text)
-    stop_words = set(stopwords.words('english'))
     tokens = word_tokenize(text)
-
-    stop_words = set(stopwords.words('english'))
-    tokens = [token for token in tokens if token not in stop_words]
+    
+    tokens = [token for token in tokens if token not in stopwords]
     text = ' '.join(tokens)
 
     return text
