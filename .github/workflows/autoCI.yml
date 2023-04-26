@@ -1,0 +1,28 @@
+﻿name: Deploy Django App to Azure VM with Self-hosted runner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Deploy to Self-hosted Server
+        run: |
+          cd /Django/fit5120_backend_Django/
+          git pull
+          python manage.py makemigrations
+          python manage.py migrate
