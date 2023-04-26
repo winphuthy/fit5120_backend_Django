@@ -1,4 +1,3 @@
-from transformers import BertForPreTraining,BertTokenizer
 import re
 import string
 import nltk

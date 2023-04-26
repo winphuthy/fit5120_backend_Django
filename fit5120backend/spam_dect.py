@@ -1,5 +1,5 @@
 from preprocess import preprocess
-from transformers import BertForSequenceClassification, BertTokenizer
+from transformers import AutoTokenizer,AutoModelForSequenceClassification
 import torch
 
 def spam_dect(text):
@@ -8,7 +8,7 @@ def spam_dect(text):
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
-    model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
+    model = AutoModelForSequenceClassification.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection",num_labels = 2)
     model.load_state_dict(state_dict)
 
         # Move the model to the device
@@ -16,7 +16,7 @@ def spam_dect(text):
     model.to(device)
     # Tokenize the text
     text = preprocess(text)
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    tokenizer = AutoTokenizer.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection")
     inputs = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     inputs.to(device)
 

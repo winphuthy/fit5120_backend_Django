@@ -90,7 +90,7 @@ ban_wds = ['anal',
  'negro',
  'smalleye',
  'porn',
- 'pron']
+ 'pron','nazi']
 #Filter function
 def word_dect(text):
     text_cln = text.lower()

@@ -10,13 +10,7 @@ COPY requirements.txt .
 # 安装依赖
 RUN pip install -r requirements.txt
 
-# 将models目录复制到容器中
-COPY model .
-
 # 将当前目录下的所有文件复制到容器中
-COPY fit5120Django fit5120Django
-COPY fit5120backend fit5120backend
-COPY model model
 COPY . .
 
 ENV WATCHPACK_POLLING=true
@@ -26,5 +20,5 @@ EXPOSE 8000
 EXPOSE 8889
 
 # 运行命令
-CMD ["sh", "/Django/startup.sh"]
-CMD [ "sh", "/Django/test.sh" ]
+CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+
