@@ -11,6 +11,8 @@ from wordcloud import WordCloud
 from .models import Word
 from .models import Yeardata
 from .serializers import YearDataSerializer, WordsSerializer
+from .cleaner import word_dect
+from .spam_dect import spam_dect
 
 json_str = '{"Python": 150, "Java": 120, "JavaScript": 80, "Ruby": 40, "Go": 20}'
 json_str = json.loads(json_str)
@@ -32,13 +34,16 @@ def word_cloud(request):
         if request is nether GET nor POST, return error to front end.
         """
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    wordcloud = WordCloud( width= 1920, height= 1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud(width=1920, height=1080, background_color="white", max_words=1000, contour_width=3,
+                          contour_color='steelblue')
     if request.method == 'POST':
         """
         If request is Post, insert Json into database first.
         """
         json_data = json.loads(request.body)
         word = json_data.get('word')
+        if not word_dect(word):
+            return JsonResponse({'status': 'error', 'message': 'Invalid word input'})
         if not word:
             return JsonResponse({'status': 'error', 'message': 'Missing word'})
         try:
@@ -71,12 +76,14 @@ def get_year_data(request):
     except Exception:
         return JsonResponse({'msg': 'Server Error'}, status=500)
 
+
 @api_view(["GET"])
 @csrf_exempt
 def get_word_list(request):
     words = Word.objects.all().values('word')
     data = json.dumps(list(words))
     return HttpResponse(data, content_type='application/json')
+
 
 @api_view(["GET"])
 @csrf_exempt
@@ -124,7 +131,8 @@ def wordCloudImg_to_byt(image):
 @api_view(["GET"])
 @csrf_exempt
 def test(request, *args, **kwargs):
-    wordcloud = WordCloud( width= 1920, height= 1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud(width=1920, height=1080, background_color="#333", max_words=1000, contour_width=3,
+                          contour_color='steelblue')
     result = generate_wordcloud_by_database(wordcloud)
     return HttpResponse(result, content_type='image/png')
 
@@ -133,13 +141,8 @@ def test(request, *args, **kwargs):
 @api_view(["POST"])
 @csrf_exempt
 def spam_detection(request, *args, **kwargs):
-    if request.method not in ["GET", "POST"]:
-        """
-        if request is neither GET nor POST, return error to front end.
-        """
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    input_text = request.data.get('input_text') # request from front end
+    input_text = request.data.get('text')  # request from front end
     if not input_text:
         return Response({'error': 'input_text field is required.'})
     result = spam_dect(input_text)
-    return Response(result) # Return result to front_end
+    return Response(result)  # Return result to front_end

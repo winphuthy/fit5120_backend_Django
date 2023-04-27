@@ -6,7 +6,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 from nltk.tokenize import word_tokenize
 stopwords = set(stopwords.words('english'))
-def preprocess(text):
+def in_preprocess(text):
     # Lowercase the text
     text = str(text).lower()
 

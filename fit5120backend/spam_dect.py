@@ -1,21 +1,25 @@
-from preprocess import preprocess
-from transformers import AutoTokenizer,AutoModelForSequenceClassification
+from .preprocess import in_preprocess
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+
+use_path = 'fit5120backend/static/to_use.pth'
+
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = '/Django/fit5120backend/to_use.pth'
+    path = use_path
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
-    model = AutoModelForSequenceClassification.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection",num_labels = 2)
+    model = AutoModelForSequenceClassification.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection",
+                                                               num_labels=2)
     model.load_state_dict(state_dict)
 
-        # Move the model to the device
+    # Move the model to the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     # Tokenize the text
-    text = preprocess(text)
+    text = in_preprocess(text)
     tokenizer = AutoTokenizer.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection")
     inputs = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     inputs.to(device)
@@ -29,5 +33,5 @@ def spam_dect(text):
     _, predicted_label = torch.max(logits, dim=1)
 
     # Print the percentage of label 1
-    label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100 
-    return "RESULT: Your message is " + str(round(label_1_percentage,2))+ " percent chance to be a scam."
+    label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100
+    return "RESULT: Your message is " + str(round(label_1_percentage, 2)) + " percent chance to be a scam."

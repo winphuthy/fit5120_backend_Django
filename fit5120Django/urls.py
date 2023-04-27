@@ -26,5 +26,6 @@ urlpatterns = [
     path('gettopword', views.get_top_word),
     path('getwordlist', views.get_word_list),
     path('gettopword', views.get_top_word),
+    path('spamdetection', views.spam_detection),
     path('test', views.test)
 ]
