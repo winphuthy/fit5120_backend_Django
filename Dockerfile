@@ -1,4 +1,4 @@
-﻿# 基于Python 3.11.2镜像构建
+# 基于Python 3.11.2镜像构建
 FROM python:3.9
 
 # 设置工作目录
@@ -19,5 +19,5 @@ ENV WATCHPACK_POLLING=true
 EXPOSE 8000
 
 # 运行命令
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
-#CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
+CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
+#CMD ["python"]

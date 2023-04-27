@@ -127,3 +127,19 @@ def test(request, *args, **kwargs):
     wordcloud = WordCloud( width= 1920, height= 1080, background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
     result = generate_wordcloud_by_database(wordcloud)
     return HttpResponse(result, content_type='image/png')
+
+
+#### LESTER MODIFICATION NEEDED ####
+@api_view(["POST"])
+@csrf_exempt
+def spam_detection(request, *args, **kwargs):
+    if request.method not in ["GET", "POST"]:
+        """
+        if request is neither GET nor POST, return error to front end.
+        """
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    input_text = request.data.get('input_text') # request from front end
+    if not input_text:
+        return Response({'error': 'input_text field is required.'})
+    result = spam_dect(input_text)
+    return Response(result) # Return result to front_end
