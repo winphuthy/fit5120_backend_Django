@@ -1,10 +1,35 @@
-from preprocess import preprocess
 from transformers import AutoTokenizer,AutoModelForSequenceClassification
 import torch
+import re
+import string
+import nltk
+from nltk.corpus import stopwords
+nltk.download('punkt')
+nltk.download('stopwords')
+from nltk.tokenize import word_tokenize
+stopwords = set(stopwords.words('english'))
+
+def preprocess(text):
+    # Lowercase the text
+    text = str(text).lower()
+
+    # Remove special characters and symbols
+    text = re.sub(r'\d+', '', text)
+    text = re.sub(r'[^\w\s]', '', text)
+    # Remove \n symbol
+    text = re.sub(r'\n','',text )
+    # Remove multiple spaces
+    text = re.sub('\s+', ' ', text)
+    tokens = word_tokenize(text)
+    
+    tokens = [token for token in tokens if token not in stopwords]
+    text = ' '.join(tokens)
+
+    return text
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = '/Django/fit5120backend/to_use.pth'
+    path = 'to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
@@ -19,15 +44,23 @@ def spam_dect(text):
     tokenizer = AutoTokenizer.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection")
     inputs = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     inputs.to(device)
+    input_ids = torch.tensor(tokenizer.encode(text, add_special_tokens=True)).unsqueeze(0)
 
     # Pass the input through the model to get the logits
     with torch.no_grad():
-        outputs = model(**inputs)
+        outputs = model(**inputs,output_attentions=True)
         logits = outputs.logits
+        attentions = outputs.attentions[0]
+    avg_attentions = torch.mean(attentions, dim=1)[0]
 
     # Get the predicted label
     _, predicted_label = torch.max(logits, dim=1)
 
+    # Get the important words
+    important_words = []
+    for i in torch.topk(avg_attentions, k=3).indices:
+        important_words.append(tokenizer.decode(input_ids[0][i].tolist()))
+
     # Print the percentage of label 1
     label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100 
-    return "RESULT: Your message is " + str(round(label_1_percentage,2))+ " percent chance to be a scam."
+    return "RESULT: Your message is " + str(round(label_1_percentage,2))+ " percent chance to be a scam. " + str(important_words[:3]) + ' are the word-combinations that contributing the most to the prediction.'
