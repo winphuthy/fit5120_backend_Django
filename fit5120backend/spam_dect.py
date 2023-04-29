@@ -63,4 +63,14 @@ def spam_dect(text):
 
     # Print the percentage of label 1
     label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100 
-    return "RESULT: Your message is " + str(round(label_1_percentage,2))+ " percent chance to be a scam. " + str(important_words[:3]) + ' are the word-combinations that contributing the most to the prediction.'
+    if label_1_percentage > 85:
+        label_1_percentage = 'very high chance'
+    elif label_1_percentage > 75:
+        label_1_percentage = 'high chance'
+    elif label_1_percentage > 55:
+        label_1_percentage = 'decent chance'
+    elif label_1_percentage > 35:
+        label_1_percentage = 'low chance'
+    else:
+        label_1_percentage = 'very low chance, but please still be cautious'
+    return "RESULT: Your message has a " + label_1_percentage+ " to be a scam. " + str(important_words[:1]) + ' are the word-combinations that contributing the most to the prediction.'
