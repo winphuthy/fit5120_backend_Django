@@ -29,7 +29,7 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = 'to_use.pth'
+    path = 'fit5120backend/static/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
