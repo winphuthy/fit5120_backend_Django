@@ -29,7 +29,7 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = '/Django/fit5120backend/to_use.pth'
+    path = 'fit5120backend/static/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
@@ -63,15 +63,16 @@ def spam_dect(text):
 
     # Print the percentage of label 1
     label_1_percentage = torch.softmax(logits, dim=1)[0][1].item() * 100 
+    label_1_str = None
     if label_1_percentage > 85:
-        label_1_percentage = 'very high chance'
+        label_1_str = 'very high chance'
     elif label_1_percentage > 75:
-        label_1_percentage = 'high chance'
+        label_1_str = 'high chance'
     elif label_1_percentage > 55:
-        label_1_percentage = 'decent chance'
+        label_1_str = 'decent chance'
     elif label_1_percentage > 35:
-        label_1_percentage = 'low chance'
+        label_1_str = 'low chance'
     else:
-        label_1_percentage = 'very low chance'
-        return print(f" Your message has a {label_1_percentage} to be a scam. However,please still be cautious \n {str(important_words[:1])} are the words contributing the most to this prediction.")
-    return print(f" Your message has a {label_1_percentage} to be a scam. \n {str(important_words[:1])} are the words contributing the most to this prediction.")
+        label_1_str = 'very low chance'
+        return print(f"Your message has a {label_1_str} to be a scam, however please still be caution. \n {str(important_words[:1])} are the word-combinations that contributing the most to the prediction.")
+    return print(f"Your message has a {label_1_str} to be a scam. \n {str(important_words[:1])} are the word-combinations that contributing the most to the prediction.")

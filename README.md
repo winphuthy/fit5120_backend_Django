@@ -5,4 +5,5 @@
 4. Post request and it will download dependence for torch e.g. curl -X POST "http://localhost:8000/spam-detection/" -H "Content-Type: application/json" -d '{"text": "click here and win a fortune!!!!!"}'
 
 INPUT: '{"text": "click here and win a fortune!!!!!"}
+
 OUTPUT: {"result":"RESULT: Your message is 94.91 percent chance to be a scam."}

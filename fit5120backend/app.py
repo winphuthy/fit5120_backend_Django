@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 # Import your functions here
-from preprocess import preprocess
+from preprocess import in_preprocess
 from spam_dect import spam_dect
 
 # Define your FastAPI app
@@ -16,7 +16,7 @@ class Message(BaseModel):
 @app.post("/spam-detection/")
 async def predict_spam(message: Message):
     # Preprocess the message
-    preprocessed_text = preprocess(message.text)
+    preprocessed_text = in_preprocess(message.text)
     
     # Call your spam detection function
     result = spam_dect(preprocessed_text)

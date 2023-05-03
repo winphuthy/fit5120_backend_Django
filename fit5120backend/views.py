@@ -23,23 +23,29 @@ text = " ".join([k for k in json_str.keys() for i in range(json_str[k])])
 
 @api_view(["GET", "POST"])
 @csrf_exempt
-def word_cloud(request, *args, **kwargs):
+def word_cloud(request):
+    """
+    Generate word cloud
+    :param request: request from front-end
+    :return: JSON to frontend
+    """
     if request.method not in ["GET", "POST"]:
         """
         if request is nether GET nor POST, return error to front end.
         """
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
+    wordcloud = WordCloud(width=1920, height=1080, background_color="white", max_words=1000, contour_width=3,
+                          contour_color='steelblue')
     if request.method == 'POST':
         """
         If request is Post, insert Json into database first.
         """
         json_data = json.loads(request.body)
         word = json_data.get('word')
-        word = word_dect(word)
-
+        if not word_dect(word):
+            return JsonResponse({'status': 'error', 'message': 'Invalid word input'})
         if not word:
-            return JsonResponse({'status': 'error', 'message': 'Sensitive Word Detected or length of word is too long'})
+            return JsonResponse({'status': 'error', 'message': 'Missing word'})
         try:
             word_obj = Word.objects.get(word=word)
             word_obj.increment_count()
@@ -55,7 +61,12 @@ def word_cloud(request, *args, **kwargs):
 
 @api_view(["GET"])
 @csrf_exempt
-def get_year_data(request, *args, **kwargs):
+def get_year_data(request):
+    """
+    Get year_data for front end
+    :param request: request from front-end
+    :return: JSON to frontend
+    """
     try:
         year_data = Yeardata.objects.all()
         serializer = YearDataSerializer(year_data, many=True)
@@ -68,10 +79,23 @@ def get_year_data(request, *args, **kwargs):
 
 @api_view(["GET"])
 @csrf_exempt
-def test(request, *args, **kwargs):
-    wordcloud = WordCloud(background_color="white", max_words=1000, contour_width=3, contour_color='steelblue')
-    result = generate_wordcloud_by_database(wordcloud)
-    return HttpResponse(result, content_type='image/png')
+def get_word_list(request):
+    words = Word.objects.all().values('word')
+    data = json.dumps(list(words))
+    return HttpResponse(data, content_type='application/json')
+
+
+@api_view(["GET"])
+@csrf_exempt
+def get_top_word(request):
+    """
+    Get the top 5 word in database
+    :param request: request from front-end
+    :return: JSON to frontend
+    """
+    top_words = Word.objects.order_by('-count')[:5]
+    serializer = WordsSerializer(top_words, many=True)
+    return Response(serializer.data)
 
 
 def generate_wordcloud_by_database(wordcloud):
@@ -103,18 +127,22 @@ def wordCloudImg_to_byt(image):
     result = img_bytes.getvalue()
     return result
 
+
+@api_view(["GET"])
+@csrf_exempt
+def test(request, *args, **kwargs):
+    wordcloud = WordCloud(width=1920, height=1080, background_color="#333", max_words=1000, contour_width=3,
+                          contour_color='steelblue')
+    result = generate_wordcloud_by_database(wordcloud)
+    return HttpResponse(result, content_type='image/png')
+
+
 #### LESTER MODIFICATION NEEDED ####
 @api_view(["POST"])
 @csrf_exempt
 def spam_detection(request, *args, **kwargs):
-    if request.method not in ["GET", "POST"]:
-        """
-        if request is neither GET nor POST, return error to front end.
-        """
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    input_text = request.data.get('input_text') # request from front end
+    input_text = request.data.get('text')  # request from front end
     if not input_text:
         return Response({'error': 'input_text field is required.'})
     result = spam_dect(input_text)
-    return Response(result) # Return result to front_end
-
+    return Response(result)  # Return result to front_end
