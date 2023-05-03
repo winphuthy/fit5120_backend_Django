@@ -29,7 +29,7 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = 'to_use.pth'
+    path = '/Django/fit5120backend/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
@@ -72,5 +72,6 @@ def spam_dect(text):
     elif label_1_percentage > 35:
         label_1_percentage = 'low chance'
     else:
-        label_1_percentage = 'very low chance, but please still be cautious'
-    return "RESULT: Your message has a " + label_1_percentage+ " to be a scam. " + str(important_words[:1]) + ' are the word-combinations that contributing the most to the prediction.'
+        label_1_percentage = 'very low chance'
+        return print(f" Your message has a {label_1_percentage} to be a scam. However,please still be cautious \n {str(important_words[:1])} are the words contributing the most to this prediction.")
+    return print(f" Your message has a {label_1_percentage} to be a scam. \n {str(important_words[:1])} are the words contributing the most to this prediction.")
