@@ -29,7 +29,7 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    path = 'fit5120backend/static/to_use.pth'
+    path = 'static/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
@@ -74,5 +74,5 @@ def spam_dect(text):
         label_1_str = 'low chance'
     else:
         label_1_str = 'very low chance'
-        return print(f"Your message has a {label_1_str} to be a scam, however please still be caution. \n {str(important_words[:1])} are the word-combinations that contributing the most to the prediction.")
-    return print(f"Your message has a {label_1_str} to be a scam. \n {str(important_words[:1])} are the word-combinations that contributing the most to the prediction.")
+        return f"Your message has a {label_1_str} to be a scam, however please still be caution. {str(important_words[:1])} are the words that contributing the most to this prediction.",label_1_percentage
+    return f"Your message has a {label_1_str} to be a scam. {str(important_words[:1])} are the words that contributing the most to this prediction.",label_1_percentage
