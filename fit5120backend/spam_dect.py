@@ -29,11 +29,12 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
+    model_path = 'static/model_backup'
     path = 'static/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
-    model = AutoModelForSequenceClassification.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection",num_labels = 2)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path,num_labels = 2)
     model.load_state_dict(state_dict)
 
         # Move the model to the device
@@ -41,7 +42,7 @@ def spam_dect(text):
     model.to(device)
     # Tokenize the text
     text = preprocess(text)
-    tokenizer = AutoTokenizer.from_pretrained("mrm8488/bert-tiny-finetuned-sms-spam-detection")
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
     inputs = tokenizer(text, padding=True, truncation=True, return_tensors="pt")
     inputs.to(device)
     input_ids = torch.tensor(tokenizer.encode(text, add_special_tokens=True)).unsqueeze(0)
@@ -73,6 +74,10 @@ def spam_dect(text):
     elif label_1_percentage > 35:
         label_1_str = 'low chance'
     else:
-        label_1_str = 'very low chance'
-        return f"Your message has a {label_1_str} to be a scam, however please still be caution. {str(important_words[:1])} are the words that contributing the most to this prediction.",label_1_percentage
-    return f"Your message has a {label_1_str} to be a scam. {str(important_words[:1])} are the words that contributing the most to this prediction.",label_1_percentage
+        result_str = f"Your message has a {label_1_str} to be a scam, however please still be caution. {str(important_words[:1])} are the words that contributing the most to this prediction."
+        label_1_percentage = round(label_1_percentage,2)
+        return result_str,label_1_percentage
+    
+    result_str = f"Your message has a {label_1_str} to be a scam. {str(important_words[:1])} are the words that contributing the most to this prediction."
+    label_1_percentage = round(label_1_percentage,2)
+    return result_str,label_1_percentage
