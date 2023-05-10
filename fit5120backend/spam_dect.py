@@ -29,12 +29,12 @@ def preprocess(text):
 
 def spam_dect(text):
     # Load the saved model state dictionary
-    model_path = 'static/model_backup'
-    path = 'static/to_use.pth'
+    model_path = 'fit5120backend/static/model_backup'
+    path = 'fit5120backend/static/to_use.pth'
     state_dict = torch.load(path)
 
     # Instantiate the model class and load the saved state dictionary
-    model = AutoModelForSequenceClassification.from_pretrained(model_path,num_labels = 2)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels = 2)
     model.load_state_dict(state_dict)
 
         # Move the model to the device
