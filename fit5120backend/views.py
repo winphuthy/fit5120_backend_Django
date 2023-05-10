@@ -137,12 +137,20 @@ def test(request, *args, **kwargs):
     return HttpResponse(result, content_type='image/png')
 
 
-#### LESTER MODIFICATION NEEDED ####
 @api_view(["POST"])
 @csrf_exempt
 def spam_detection(request, *args, **kwargs):
     input_text = request.data.get('text')  # request from front end
     if not input_text:
         return Response({'error': 'input_text field is required.'})
-    result = spam_dect(input_text)
-    return Response(result)  # Return result to front_end
+    result,result_num = spam_dect(input_text)
+    return Response({'result': result, 'result_num': result_num}) # Return result to front_end
+
+@api_view(['POST'])
+@csrf_exempt
+def password_evaluator(request, *args, **kwargs):
+    input_password = request.data.get('text')
+    if not input_password:
+        return Response({'error':'text input require'})
+    result_psw = eval(text)
+    return Response({'Result':result_psw})
