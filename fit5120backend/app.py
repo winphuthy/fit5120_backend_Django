@@ -19,12 +19,12 @@ async def predict_spam(message: Message):
     preprocessed_text = in_preprocess(message.text)
     
     # Call your spam detection function
-    result = spam_dect(preprocessed_text)
+    result,result_num = spam_dect(preprocessed_text)
     
     # Return the prediction as a response
-    return {"result": result}
+    return {"result": result,"result_percentage":result_num}
 
 # Run the FastAPI app
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8999)
 

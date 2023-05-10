@@ -67,13 +67,14 @@ def spam_dect(text):
     label_1_str = None
     if label_1_percentage > 85:
         label_1_str = 'very high chance'
-    elif label_1_percentage > 75:
+    elif label_1_percentage > 70:
         label_1_str = 'high chance'
-    elif label_1_percentage > 55:
+    elif label_1_percentage > 50:
         label_1_str = 'decent chance'
-    elif label_1_percentage > 35:
+    elif label_1_percentage > 20:
         label_1_str = 'low chance'
     else:
+        label_1_str = 'very low chance'
         result_str = f"Your message has a {label_1_str} to be a scam, however please still be caution. {str(important_words[:1])} are the words that contributing the most to this prediction."
         label_1_percentage = round(label_1_percentage,2)
         return result_str,label_1_percentage

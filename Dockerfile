@@ -16,8 +16,8 @@ COPY . .
 ENV WATCHPACK_POLLING=true
 
 # 开放端口
-EXPOSE 8000
+EXPOSE 8000 8999
 
 # 运行命令
-CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000", ">", "/dev/null", "2>&1", "&" ]
+CMD [ "nohup", "python", "manage.py", "runserver", "0.0.0.0:8000"]
 #CMD ["python"]

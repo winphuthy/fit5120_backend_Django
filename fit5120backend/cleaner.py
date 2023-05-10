@@ -37,7 +37,7 @@ ban_wds = ['anal',
  'fellate',
  'fellatio',
  'felching',
- 'fuck','f3uk','nazi','hitler'
+ 'fuck','f3uk','nazi','hitler',
  'f u c k',
  'fudgepacker',
  'fudge packer',
