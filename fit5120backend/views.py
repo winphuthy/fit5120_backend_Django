@@ -152,5 +152,5 @@ def password_evaluator(request, *args, **kwargs):
     input_password = request.data.get('text')
     if not input_password:
         return Response({'error':'text input require'})
-    result_psw = eval(text)
-    return Response({'Result':result_psw})
+    result_color,result_str = eval(text)
+    return Response({'color':result_color,'result':result_str})
