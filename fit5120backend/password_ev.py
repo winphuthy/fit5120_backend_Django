@@ -2,11 +2,17 @@ import pickle
 from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier,BaggingClassifier,StackingClassifier
 from xgboost import XGBClassifier
 import numpy as np
+import pandas as pd
 
-model_path = 'static/stack_model.pkl'
-vector_path = 'static/vectorizer2.pkl'
+model_path = 'fit5120backend/static/stack_model.pkl'
+vector_path = 'fit5120backend/static/vectorizer2.pkl'
+common = pd.read_csv('fit5120backend/static/common.csv')
 
 def password_evaluator(text):
+    if text in list(common['password']):
+         print('This is a common word, please do not use this as a password')
+         return None
+
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
